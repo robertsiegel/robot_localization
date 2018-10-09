@@ -2,7 +2,7 @@
 
 class Location(object):
     """ The class that contains information for a location object"""
-    def __init__(self, x, y, theta, relative):
+    def __init__(self, x, y, theta, relative = True):
         self.x = x
         self.y = y
         self.theta = theta
