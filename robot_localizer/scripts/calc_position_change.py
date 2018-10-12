@@ -6,6 +6,7 @@ from geometry_msgs.msg import Twist, Vector3, PoseWithCovariance, Pose, Point, Q
 from helper_functions import TFHelper
 from constants import TIME_THROTTLE
 import rospy, time
+import math
 
 class CalcPosNode(object):
     def __init__(self):
@@ -23,7 +24,7 @@ class CalcPosNode(object):
         self.prev_time = time.time()
         # storing and working with absolute odometry, publishing relative changes
         transformed_pos = self.transform_helper.convert_pose_to_xy_and_theta(msg.pose.pose) # transform to x,y,yaw
-        new_pos = Vector3(transformed_pos[0], transformed_pos[1], transformed_pos[2])
+        new_pos = Vector3(transformed_pos[0], transformed_pos[1], math.degrees(transformed_pos[2]))
         self.pos_change_pub.publish(new_pos.x - self.prev_pos.x, new_pos.y - self.prev_pos.y, new_pos.z - self.prev_pos.z)
         self.prev_pos = new_pos
         
