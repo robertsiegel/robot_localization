@@ -63,7 +63,6 @@ class ParticleFilter(object):
         if len(current_particles) < NUM_INITIAL_PARTICLES:
             for loc_tuple in potential_locations:
                 for i in range(4)
-                    total_delta = math.random.normal(loc=1, )
                     x = loc_tuple[0] + math.random.normal(loc=0, scale=0.75)
                     y = loc_tuple[1] + math.random.normal(loc=0, scale=0.75)
                     theta = loc_tuple[2] + math.random.normal(loc=0, scale=0.5)
