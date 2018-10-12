@@ -2,7 +2,7 @@
 from typing import List
 from geometry_msgs.msg import Vector3
 from occupancy_field import OccupancyField
-from constants import NUM_INITIAL_PARTICLES, PROB_THRESHOLD
+from constants import NUM_INITIAL_PARTICLES, CUTOFF_THRESHOLD
 import numpy as np
 
 class Particles():
@@ -28,12 +28,14 @@ class Particles():
     def update_locations(potential_locations):
         # just assuming the structure of potential_locations to be a list of tuples (cur_loc(vector3), prev_loc, confidence)
         # going to average old confidence with new confidence
-        new_locations = {}
-        for cur_loc, prev_loc, confidence in potential_locations:
-            # new_conf = (confidence + self.locations[self.vector_to_tuple(prev_loc)]) / 2
-            new_conf = self.confidence_func(confidence, self.locations[self.vector_to_tuple(prev_loc)])
-            if new_conf >= PROB_THRESHOLD:
-                new_locations[self.vector_to_tuple(cur_loc)] = new_conf
+        new_locations = [(cur_loc, prev_loc, self.confidence_func(confidence, self.locations[self.vector_to_tuple(prev_loc)])) for cur_loc, prev_loc, confidence in potential_locations]
+        self.locations = {self.vector_to_tuple(cur_loc): confidence for cur_loc, prev_loc, confidence in sorted(new_locations, key=lambda x: x[2], reverse=True)[:int(len(new_locations) * CUTOFF_THRESHOLD)]}
+        # sorted_potential_locations = sorted(potential_locations, key=lambda x: x[2], reverse=Tru)
+        # for cur_loc, prev_loc, confidence in potential_locations:
+        #     # new_conf = (confidence + self.locations[self.vector_to_tuple(prev_loc)]) / 2
+        #     new_conf = self.confidence_func(confidence, self.locations[self.vector_to_tuple(prev_loc)])
+        #     if new_conf >= PROB_THRESHOLD:
+        #         new_locations[self.vector_to_tuple(cur_loc)] = new_conf
         
 
     def display_particle_markers(self, location)
