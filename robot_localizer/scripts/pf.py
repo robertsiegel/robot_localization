@@ -61,7 +61,7 @@ class ParticleFilter(object):
             for i in NEW_PARTICLES:
                 x_noise = math.random.normal(loc=0, scale=.75)
                 y_noise = math.random.normal(loc=0, scale=.75)
-                theta_noise = math.random.normal(loc=0, scale=.75)
+                theta_noise = math.random.normal(loc=0, scale=45)
                 # appending (x, y, theta, original particle position)
                 new_particles.append((particle[0] + position_change.x + x_noise, particle[1] + position_change.y + y_noise, (particle[2] + position_change.z + theta_noise) % 360, particle))
 
