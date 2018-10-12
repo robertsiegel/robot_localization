@@ -17,7 +17,7 @@ class Particles():
     def vector_to_tuple(v):
         return (v.x, v.y, v.z)
 
-    def initialize_locations(self):
+    def initialize_particles(self):
         # function to initialize the locations when the particle filter begins to run
 
         # determine max height and width from map
@@ -32,6 +32,10 @@ class Particles():
             y = np.random.randint(height)
             theta = math.radians(random.randint(359))
             self.locations[(x,y,theta)] = initial_prob
+
+    def add_particle(self, location, prob):
+        # adds a particle to the locations array
+        self.locations[location] = prob
 
     def update_locations(potential_locations):
         # just assuming the structure of potential_locations to be a list of tuples (cur_loc(vector3), prev_loc, confidence)
