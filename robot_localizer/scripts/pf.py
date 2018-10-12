@@ -9,6 +9,8 @@ from geometry_msgs.msg import PoseWithCovarianceStamped, PoseArray, Pose
 from helper_functions import TFHelper
 from occupancy_field import OccupancyField
 
+from particles import Particles
+from constants import NUM_INITIAL_PARTICLES
 
 class ParticleFilter(object):
     """ The class that represents a Particle Filter ROS Node
@@ -32,6 +34,9 @@ class ParticleFilter(object):
         self.occupancy_field = OccupancyField()
         self.transform_helper = TFHelper()
 
+        self.particles = Particles()
+        self.particles.initialize_locations()
+
     def update_initial_pose(self, msg):
         """ Callback function to handle re-initializing the particle filter
             based on a pose estimate.  These pose estimates could be generated
@@ -43,6 +48,30 @@ class ParticleFilter(object):
         self.transform_helper.fix_map_to_odom_transform(msg.pose.pose,
                                                         msg.header.stamp)
         # initialize your particle filter based on the xy_theta tuple
+
+    def add_noise_to_particles(self):
+        current_particles = self.particles.getLocations()
+        if len(current_particles) < NUM_INITIAL_PARTICLES:
+            for loc_tuple in potential_locations:
+                # ADD 4 new noise locations for each particle
+
+
+
+    def calculate_particle probs(self):
+        # iterate through particles, determine likelihood of each
+        potential_locations = self.locations.getLocations()
+        for loc_tuple in potential_locations
+            prior_conf = potential_locations[loc_tuple]
+
+
+    def get_closest_obstacle_from_laserscan(self, ranges):
+        # this function is used to calculate probabilties of each particle
+        closest_laserscan = (0,0)
+        for i in ranges():
+            scan_val = ranges[i]
+            if scan_val > 0 and (scan_val < closest_laserscan[1] or closest_laserscan[1] == 0):
+                closest_laserscan = (i, ranges[i])
+        return closest_laserscan
 
     def run(self):
         r = rospy.Rate(5)

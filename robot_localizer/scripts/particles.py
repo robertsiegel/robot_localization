@@ -4,6 +4,7 @@ from geometry_msgs.msg import Vector3
 from occupancy_field import OccupancyField
 from constants import NUM_INITIAL_PARTICLES, PROB_THRESHOLD
 import numpy as np
+import math
 
 class Particles():
     """ The class that represents ROS Node to store the particles and each of their potential
@@ -18,12 +19,19 @@ class Particles():
 
     def initialize_locations(self):
         # function to initialize the locations when the particle filter begins to run
-        initial_conf = 1.0/NUM_INITIAL_PARTICLES
+
+        # determine max height and width from map
+        height = self.occupancy_field.map.info.height
+        width = self.occupancy_field.map.info.width
+        
+        initial_prob = 1.0/NUM_INITIAL_PARTICLES # equal probability weight for each initial particle
+
+        # initialize a number of particles given by constant
         for i in range(NUM_INITIAL_PARTICLES):
-            x = (np.random.randint(100)-50)/10.0 # gives range of -5 to 5 m
-            y = (np.random.randint(100)-50)/10.0
-            theta = random.randint(359)
-            self.locations[(x,y,theta)] = initial_conf
+            x = np.random.randint(width)
+            y = np.random.randint(height)
+            theta = math.radians(random.randint(359))
+            self.locations[(x,y,theta)] = initial_prob
 
     def update_locations(potential_locations):
         # just assuming the structure of potential_locations to be a list of tuples (cur_loc(vector3), prev_loc, confidence)
