@@ -72,7 +72,7 @@ class ParticleFilter(object):
                     # theta = loc_tuple[2] + math.random.uniform(-theta_noise, theta_noise)
                     self.particles.add_location((x,y,theta), 0)
 
-    def calculate_particle probs(self):
+    def calculate_particle_probs(self):
         # iterate through particles, determine likelihood of each
         total_weight = 0
         particles = self.locations.getLocations()
