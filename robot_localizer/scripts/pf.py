@@ -109,7 +109,7 @@ class ParticleFilter(object):
 
     def run(self):
         r = rospy.Rate(5)
-
+        scan_sub = rospy.Subscriber('/scan', LaserScan, self.update_ranges)
         while not(rospy.is_shutdown()):
             # in the main loop all we do is continuously broadcast the latest
             # map to odom transform
@@ -119,9 +119,6 @@ class ParticleFilter(object):
     def update_ranges(self, msg):
         # callback function from listener
         self.ranges = msg.ranges
-
-    def listener(self):
-        scan_sub = rospy.Subscriber('/scan', LaserScan, self.update_ranges)
 
 
 if __name__ == '__main__':
