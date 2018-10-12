@@ -5,6 +5,7 @@ from occupancy_field import OccupancyField
 from constants import NUM_INITIAL_PARTICLES, CUTOFF_THRESHOLD
 import numpy as np
 import math
+from visualization_msgs.msg import Marker, MarkerArray
 
 class Particles():
     """ The class that represents ROS Node to store the particles and each of their potential
@@ -13,6 +14,7 @@ class Particles():
         self.occupancy_field = OccupancyField()
         self.locations = {} # location to be stored as tuple(x, y, theta): confidence
         self.confidence_func = lambda new_confidence, old_confidence: (new_confidence + old_confidence) / 2
+        self.vis_pub = rospy.Publisher('/visualization_marker', MarkerArray, queue_size=10)
 
     def vector_to_tuple(v):
         return (v.x, v.y, v.z)
@@ -50,21 +52,26 @@ class Particles():
         #         new_locations[self.vector_to_tuple(cur_loc)] = new_conf
         
 
-    def display_particle_markers(self, location)
-        marker = Marker()
-        marker.header.frame_id = "base_link"
-        marker.type = marker.ARROW
-        marker.pose.position.x = location[0]
-        marker.pose.position.y = location[1]
-        marker.pose.position.z = 0
-        marker.pose.orientation.x = 0
-        marker.pose.orientation.y = 0
-        marker.pose.orientation.z = location[2]
-        marker.pose.orientation.w = 0
-        marker.scale.x = .1
-        marker.scale.y = .1
-        marker.scale.z = .1
-        marker.color.g = 1
+    def display_particle_markers(self)
+        marker_array = MarkerArray()
+        for location in self.locations:
+            marker = Marker()
+            marker.header.frame_id = "base_link"
+            marker.type = marker.ARROW
+            marker.pose.position.x = location[0]
+            marker.pose.position.y = location[1]
+            marker.pose.position.z = 0
+            marker.pose.orientation.x = 0
+            marker.pose.orientation.y = 0
+            marker.pose.orientation.z = location[2]
+            marker.pose.orientation.w = 0
+            marker.scale.x = .1
+            marker.scale.y = .1
+            marker.scale.z = .1
+            marker.color.g = 1
+            MarkerArray.append(marker)
+
+        vis_pub.publish(marker_array) 
 
     def get_locations():
         return self.locations
