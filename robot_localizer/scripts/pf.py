@@ -53,6 +53,7 @@ class ParticleFilter(object):
         # initialize your particle filter based on the xy_theta tuple
 
     def add_noise_to_particles(self, position_change):
+        # OUTPUT FORMAT : List[Tuple(x, y, theta, original particle position)]
         current_particles = self.particles.get_locations()
         new_particles = []
 
@@ -87,6 +88,7 @@ class ParticleFilter(object):
         return new_particles
 
     def calculate_particle_probs(self, particles):
+        # OUTPUT FORMAT : List[Tuple(cur_loc, prev_loc, confidence weight)]
         # iterate through particles, determine likelihood of each
         total_weight = 0
         # particles = self.locations.getLocations()
