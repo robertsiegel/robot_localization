@@ -50,9 +50,10 @@ class Particles():
         #     new_conf = self.confidence_func(confidence, self.locations[self.vector_to_tuple(prev_loc)])
         #     if new_conf >= PROB_THRESHOLD:
         #         new_locations[self.vector_to_tuple(cur_loc)] = new_conf
-        
 
-    def display_particle_markers(self)
+        self.publish_particle_markers()
+
+    def publish_particle_markers(self)
         marker_array = MarkerArray()
         for location in self.locations:
             marker = Marker()
