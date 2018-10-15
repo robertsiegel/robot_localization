@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from typing import List
 from geometry_msgs.msg import Vector3
 from occupancy_field import OccupancyField
 from constants import NUM_INITIAL_PARTICLES, CUTOFF_THRESHOLD
@@ -53,7 +52,7 @@ class Particles():
 
         self.publish_particle_markers()
 
-    def publish_particle_markers(self)
+    def publish_particle_markers(self):
         marker_array = MarkerArray()
         for location in self.locations:
             marker = Marker()

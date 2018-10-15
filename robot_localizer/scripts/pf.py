@@ -21,7 +21,7 @@ class ParticleFilter(object):
 
         # pose_listener responds to selection of a new approximate robot
         # location (for instance using rviz)
-        rospy.Subscriber("initialpose"
+        rospy.Subscriber("initialpose",
                          PoseWithCovarianceStamped,
                          self.update_initial_pose)
 
@@ -93,14 +93,14 @@ class ParticleFilter(object):
         total_weight = 0
         # particles = self.locations.getLocations()
         potential_locations = []
-        for loc_tuple in particles
+        for loc_tuple in particles:
             # prior_conf = particles[loc_tuple]
             measured_distance = get_closest_obstacle_from_laserscan(self.ranges)
             map_distance = occupancy_field.get_closest_obstacle_distance(loc_tuple[0], loc_tuple[1])
             
-            if measured_distance == 0 and map_distance == 0
+            if measured_distance == 0 and map_distance == 0:
                 new_weight == 500
-            elif measured_distance == 0 or map_distance == 0
+            elif measured_distance == 0 or map_distance == 0:
                 new_weight == 0
             elif measured_distance-map_distance != 0:
                 new_weight = 1/abs(measured_distance-map_distance)
