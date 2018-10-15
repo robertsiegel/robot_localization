@@ -3,7 +3,7 @@ from geometry_msgs.msg import Vector3
 from occupancy_field import OccupancyField
 from constants import NUM_INITIAL_PARTICLES, CUTOFF_THRESHOLD
 import numpy as np
-import math
+import math, rospy, random
 from visualization_msgs.msg import Marker, MarkerArray
 
 class Particles():
@@ -31,7 +31,7 @@ class Particles():
         for i in range(NUM_INITIAL_PARTICLES):
             x = np.random.randint(width)
             y = np.random.randint(height)
-            theta = math.radians(random.randint(359))
+            theta = math.radians(np.random.randint(359))
             self.locations[(x,y,theta)] = initial_prob
 
     def add_particle(self, location, prob):
