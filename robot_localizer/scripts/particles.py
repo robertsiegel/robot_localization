@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-from geometry_msgs.msg import Vector3
+from geometry_msgs.msg import Vector3, PoseArray, Pose
 from occupancy_field import OccupancyField
 from constants import NUM_INITIAL_PARTICLES, CUTOFF_THRESHOLD
 import numpy as np
 import math, rospy, random
-from visualization_msgs.msg import Marker, MarkerArray
 
 class Particles():
     """ The class that represents ROS Node to store the particles and each of their potential
@@ -13,7 +12,7 @@ class Particles():
         self.occupancy_field = OccupancyField()
         self.locations = {} # location to be stored as tuple(x, y, theta): confidence
         self.confidence_func = lambda new_confidence, old_confidence: (new_confidence + old_confidence) / 2
-        self.vis_pub = rospy.Publisher('/visualization_marker', Marker, queue_size=10)
+        self.pc_pub = rospy.Publisher('/particlecloud', PoseArray, queue_size=10)
 
     def vector_to_tuple(self, v):
         return v
@@ -53,43 +52,16 @@ class Particles():
         self.publish_particle_markers()
 
     def publish_particle_markers(self):
-        marker_array = MarkerArray()
-        # for location in self.locations:
-        #     marker = Marker()
-        #     marker.header.frame_id = "base_link"
-        #     marker.type = marker.ARROW
-        #     marker.pose.position.x = location[0]
-        #     marker.pose.position.y = location[1]
-        #     marker.pose.position.z = 0
-        #     marker.pose.orientation.x = 0
-        #     marker.pose.orientation.y = 0
-        #     marker.pose.orientation.z = location[2]
-        #     marker.pose.orientation.w = 0
-        #     marker.scale.x = .1
-        #     marker.scale.y = .1
-        #     marker.scale.z = .1
-        #     marker.color.g = 1
-        #     MarkerArray.append(marker)
+        pose_array = PoseArray()
+        pose_array.header.frame_id = "map"
+        for location in self.locations:
+            pose = Pose()
+            pose.position.x = location[0]
+            pose.position.y = location[1]
+            pose.orientation.z = location[2]
+            pose_array.poses.append(pose)
 
-        print(1)
-
-        marker = Marker()
-        marker.header.frame_id = "base_link"
-        marker.type = marker.ARROW
-        marker.pose.position.x = 1
-        marker.pose.position.y = 1
-        marker.pose.position.z = 0
-        marker.pose.orientation.x = 0
-        marker.pose.orientation.y = 0
-        marker.pose.orientation.z = 1
-        marker.pose.orientation.w = 0
-        marker.scale.x = .1
-        marker.scale.y = .1
-        marker.scale.z = .1
-        marker.color.g = 1
-        # MarkerArray.append(marker)
-
-        self.vis_pub.publish(marker) 
+        self.pc_pub.publish(pose_array)
 
     def get_locations(self):
         return self.locations
