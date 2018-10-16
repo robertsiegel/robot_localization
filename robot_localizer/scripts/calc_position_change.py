@@ -31,6 +31,8 @@ class CalcPosNode(object):
         # read in the data (odometry)
         # calculate the change in position (difference between current and last position)
         rospy.Subscriber('/odom', Odometry, self.odometry_callback)
+        while not rospy.is_shutdown():
+            pass
 
 
 if __name__ == '__main__':
