@@ -21,8 +21,8 @@ class Particles():
         # function to initialize the locations when the particle filter begins to run
 
         # determine max height and width from map
-        height = self.occupancy_field.map.info.height
-        width = self.occupancy_field.map.info.width
+        height = self.occupancy_field.map.info.height * self.occupancy_field.map.info.resolution
+        width = self.occupancy_field.map.info.width * self.occupancy_field.map.info.resolution
         
         initial_prob = 1.0/NUM_INITIAL_PARTICLES # equal probability weight for each initial particle
 
