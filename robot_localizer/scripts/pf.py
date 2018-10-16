@@ -3,10 +3,10 @@
 """ This is the starter code for the robot localization project """
 
 from __future__ import print_function, division
-import rospy
+import rospy, math
 from geometry_msgs.msg import PoseWithCovarianceStamped, PoseArray, Pose, Vector3
 from sensor_msgs.msg import LaserScan
-
+import numpy as np
 from helper_functions import TFHelper
 from occupancy_field import OccupancyField
 
@@ -58,10 +58,10 @@ class ParticleFilter(object):
         new_particles = []
 
         for particle in current_particles:
-            for i in NEW_PARTICLES:
-                x_noise = math.random.normal(loc=0, scale=.75)
-                y_noise = math.random.normal(loc=0, scale=.75)
-                theta_noise = math.random.normal(loc=0, scale=45)
+            for i in range(NEW_PARTICLES):
+                x_noise = np.random.normal(loc=0, scale=.75)
+                y_noise = np.random.normal(loc=0, scale=.75)
+                theta_noise = np.random.normal(loc=0, scale=45)
                 # appending (x, y, theta, original particle position)
                 new_particles.append((particle[0] + position_change.x + x_noise, particle[1] + position_change.y + y_noise, (particle[2] + position_change.z + theta_noise) % 360, particle))
 
@@ -95,8 +95,8 @@ class ParticleFilter(object):
         potential_locations = []
         for loc_tuple in particles:
             # prior_conf = particles[loc_tuple]
-            measured_distance = get_closest_obstacle_from_laserscan(self.ranges)
-            map_distance = occupancy_field.get_closest_obstacle_distance(loc_tuple[0], loc_tuple[1])
+            measured_distance = self.get_closest_obstacle_from_laserscan()[1]
+            map_distance = self.occupancy_field.get_closest_obstacle_distance(loc_tuple[0], loc_tuple[1])
             
             if measured_distance == 0 and map_distance == 0:
                 new_weight == 500
@@ -123,14 +123,14 @@ class ParticleFilter(object):
     def get_closest_obstacle_from_laserscan(self):
         # this function is used to calculate probabilties of each particle
         closest_laserscan = (0,0)
-        for i in self.ranges():
-            scan_val = ranges[i]
+        for i, scan_val in enumerate(self.ranges):
             if scan_val > 0 and (scan_val < closest_laserscan[1] or closest_laserscan[1] == 0):
-                closest_laserscan = (i, ranges[i])
+                closest_laserscan = (i, scan_val)
         return closest_laserscan
 
     def run(self):
         r = rospy.Rate(5)
+        print(1)
         scan_sub = rospy.Subscriber('/scan', LaserScan, self.update_ranges)
         scan_sub = rospy.Subscriber('/pos_change', Vector3, self.position_update_listener)
         while not(rospy.is_shutdown()):
