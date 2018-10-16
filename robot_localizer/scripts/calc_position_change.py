@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from sensor_msgs.msg import LaserScan
-from location import Location
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist, Vector3, PoseWithCovariance, Pose, Point, Quaternion, TwistWithCovariance
 from helper_functions import TFHelper
