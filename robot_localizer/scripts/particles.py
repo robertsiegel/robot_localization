@@ -21,15 +21,15 @@ class Particles():
         # function to initialize the locations when the particle filter begins to run
 
         # determine max height and width from map
-        height = self.occupancy_field.map.info.height * self.occupancy_field.map.info.resolution
-        width = self.occupancy_field.map.info.width * self.occupancy_field.map.info.resolution
+        height = self.occupancy_field.map.info.height * self.occupancy_field.map.info.resolution * .2
+        width = self.occupancy_field.map.info.width * self.occupancy_field.map.info.resolution * .2
         
         initial_prob = 1.0/NUM_INITIAL_PARTICLES # equal probability weight for each initial particle
 
         # initialize a number of particles given by constant
         for i in range(NUM_INITIAL_PARTICLES):
-            x = np.random.randint(width)
-            y = np.random.randint(height)
+            x = np.random.normal(loc=0, scale=1.5)
+            y = np.random.normal(loc=0, scale=1.5)
             theta = math.radians(np.random.randint(359))
             self.locations[(x,y,theta)] = initial_prob
 
@@ -56,8 +56,8 @@ class Particles():
         pose_array.header.frame_id = "map"
         for location in self.locations:
             pose = Pose()
-            pose.position.x = location[0]
-            pose.position.y = location[1]
+            pose.position.x = -location[0]
+            pose.position.y = -location[1]
             pose.orientation.z = location[2]
             pose_array.poses.append(pose)
 

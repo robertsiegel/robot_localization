@@ -59,9 +59,9 @@ class ParticleFilter(object):
 
         for particle in current_particles:
             for i in range(NEW_PARTICLES):
-                x_noise = np.random.normal(loc=0, scale=.75)
-                y_noise = np.random.normal(loc=0, scale=.75)
-                theta_noise = np.random.normal(loc=0, scale=45)
+                x_noise = np.random.normal(loc=0, scale=.25)
+                y_noise = np.random.normal(loc=0, scale=.25)
+                theta_noise = np.random.randint(360)
                 # appending (x, y, theta, original particle position)
                 new_particles.append((particle[0] + position_change.x + x_noise, particle[1] + position_change.y + y_noise, (particle[2] + position_change.z + theta_noise) % 360, particle))
 
@@ -99,7 +99,7 @@ class ParticleFilter(object):
             map_distance = self.occupancy_field.get_closest_obstacle_distance(loc_tuple[0], loc_tuple[1])
             
             if measured_distance == 0 and map_distance == 0:
-                new_weight == 500
+                new_weight == 0
             elif measured_distance == 0 or map_distance == 0:
                 new_weight == 0
             elif measured_distance-map_distance != 0:
