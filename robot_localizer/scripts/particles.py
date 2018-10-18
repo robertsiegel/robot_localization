@@ -42,12 +42,6 @@ class Particles():
         # going to average old confidence with new confidence
         new_locations = [(cur_loc, prev_loc, self.confidence_func(confidence, self.locations[self.vector_to_tuple(prev_loc)])) for cur_loc, prev_loc, confidence in potential_locations]
         self.locations = {self.vector_to_tuple(cur_loc): confidence for cur_loc, prev_loc, confidence in sorted(new_locations, key=lambda x: x[2], reverse=True)[:int(len(new_locations) * CUTOFF_THRESHOLD)]}
-        # sorted_potential_locations = sorted(potential_locations, key=lambda x: x[2], reverse=Tru)
-        # for cur_loc, prev_loc, confidence in potential_locations:
-        #     # new_conf = (confidence + self.locations[self.vector_to_tuple(prev_loc)]) / 2
-        #     new_conf = self.confidence_func(confidence, self.locations[self.vector_to_tuple(prev_loc)])
-        #     if new_conf >= PROB_THRESHOLD:
-        #         new_locations[self.vector_to_tuple(cur_loc)] = new_conf
 
         self.publish_particle_markers()
 
